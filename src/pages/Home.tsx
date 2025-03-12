@@ -2,7 +2,7 @@ import React from 'react';
 import styled, { useTheme } from 'styled-components';
 import { Link } from 'react-router-dom';
 import { ArrowRight, Code, User, Mail } from 'lucide-react'; 
-import { useEffect, useRef, useState } from 'react';
+import { useRef } from 'react';
 import { CreativeHeroSection, FloatingShape, CreativeTitle, CreativeSubtitle, CreativeDescription, CreativeButtonContainer, CreativePrimaryButton, CreativeSecondaryButton, CreativeTechContainer, CreativeTechTitle, CreativeTechGrid, CreativeTechItem, CreativeFeature, CreativeFeatureTitle, CreativeFeatureDescription } from '../styles/Creative.styles';
 
 
@@ -279,28 +279,8 @@ const FeatureTitle = styled.h3`
 `;
 
 const Home: React.FC = () => {
-  const theme = useTheme() as any;
-  const [mousePosition, setMousePosition] = useState({ x: 0, y: 0 });
+  const theme = useTheme() as any; 
   const containerRef = useRef<HTMLDivElement>(null);
-   
-  useEffect(() => {
-    if (theme.id === 'creative') {
-      const handleMouseMove = (e: MouseEvent) => {
-        if (containerRef.current) {
-          const rect = containerRef.current.getBoundingClientRect();
-          setMousePosition({
-            x: e.clientX - rect.left,
-            y: e.clientY - rect.top
-          });
-        }
-      };
-      
-      window.addEventListener('mousemove', handleMouseMove);
-      return () => {
-        window.removeEventListener('mousemove', handleMouseMove);
-      };
-    }
-  }, [theme.id]);
   
   const techStack = [
     { name: 'React', icon: <Code size={20} /> },
