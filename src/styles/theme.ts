@@ -187,7 +187,9 @@ export const creativeTheme = {
         background-position: 0% 50%;
       }
     }
-
+    a {
+      cursor: none;
+    }
     /* Add glowing dots to the background */
     body::before {
       content: '';

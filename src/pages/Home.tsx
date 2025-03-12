@@ -507,7 +507,7 @@ const Home: React.FC = () => {
   }
    
   return (
-    <HomeContainer>
+    <HomeContainer> 
       <HeroSection>
         <Title>UX Engineer & Frontend Developer</Title>
         <Subtitle>Creating intuitive and engaging user experiences</Subtitle>
