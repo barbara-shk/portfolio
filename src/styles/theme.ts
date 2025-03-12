@@ -171,6 +171,7 @@ export const creativeTheme = {
     h1, h2, h3 {
       background: linear-gradient(45deg, #7f5af0, #9e86ff, #ff8906, #e53170);
       background-size: 300% 300%;
+      background-clip: text;
       -webkit-background-clip: text;
       -webkit-text-fill-color: transparent;
       animation: gradient-text 8s ease infinite;
