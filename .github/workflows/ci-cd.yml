@@ -1,45 +1,65 @@
-name: Portfolio CI/CD
+name: Vite Portfolio CI/CD
 
 on:
   push:
     branches: [ main ]
   pull_request:
     branches: [ main ]
-  # Allows you to run this workflow manually from the Actions tab
   workflow_dispatch:
 
 jobs:
-  build-and-deploy:
+  lint-and-typecheck:
     runs-on: ubuntu-latest
     
     steps:
-      # Check out your repository under $GITHUB_WORKSPACE
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
       
-      # Set up Node.js environment (adjust version as needed)
       - name: Set up Node.js
-        uses: actions/setup-node@v3
+        uses: actions/setup-node@v4
         with:
-          node-version: '18'
+          node-version: '20' # Using a more recent Node version for your modern dependencies
           cache: 'npm'
       
-      # Install dependencies
       - name: Install dependencies
         run: npm ci
       
-      # Run tests (if you have any)
-      - name: Run tests
-        run: npm test
-        # If you don't have tests yet, you can comment this out
-        # or replace with: run: echo "No tests yet"
+      - name: Lint code
+        run: npm run lint
       
-      # Build the project
+      - name: Type check
+        run: tsc --noEmit # Run TypeScript check without emitting files
+
+  build-and-deploy:
+    needs: lint-and-typecheck
+    runs-on: ubuntu-latest
+    # Only run the deployment if push to main or manual trigger (not on PR)
+    if: github.event_name == 'push' || github.event_name == 'workflow_dispatch' 
+    
+    steps:
+      - uses: actions/checkout@v4
+      
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'npm'
+      
+      - name: Install dependencies
+        run: npm ci
+      
+      # Create .nojekyll file if it doesn't exist in public directory
+      - name: Create .nojekyll file
+        run: touch public/.nojekyll
+      
       - name: Build
         run: npm run build
       
-      # Deploy to GitHub Pages
+      # Enable GitHub Pages in your repository settings before this step
       - name: Deploy to GitHub Pages
         uses: JamesIves/github-pages-deploy-action@v4
         with:
-          folder: build # The folder the action should deploy, adjust as needed
-          # You don't need to specify a token, it uses GITHUB_TOKEN by default
+          folder: dist # Vite outputs to 'dist' by default, not 'build'
+          # Branch defaults to gh-pages
+          clean: true # Automatically remove deleted files from the deployment
+          clean-exclude: |
+            .nojekyll
