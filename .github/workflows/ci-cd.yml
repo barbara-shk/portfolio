@@ -1,0 +1,45 @@
+name: Portfolio CI/CD
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+  # Allows you to run this workflow manually from the Actions tab
+  workflow_dispatch:
+
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest
+    
+    steps:
+      # Check out your repository under $GITHUB_WORKSPACE
+      - uses: actions/checkout@v3
+      
+      # Set up Node.js environment (adjust version as needed)
+      - name: Set up Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: '18'
+          cache: 'npm'
+      
+      # Install dependencies
+      - name: Install dependencies
+        run: npm ci
+      
+      # Run tests (if you have any)
+      - name: Run tests
+        run: npm test
+        # If you don't have tests yet, you can comment this out
+        # or replace with: run: echo "No tests yet"
+      
+      # Build the project
+      - name: Build
+        run: npm run build
+      
+      # Deploy to GitHub Pages
+      - name: Deploy to GitHub Pages
+        uses: JamesIves/github-pages-deploy-action@v4
+        with:
+          folder: build # The folder the action should deploy, adjust as needed
+          # You don't need to specify a token, it uses GITHUB_TOKEN by default

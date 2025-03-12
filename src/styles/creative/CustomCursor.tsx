@@ -76,7 +76,7 @@ const CustomCursor: React.FC<CustomCursorProps> = ({ enabled }) => {
         
         // Only update state if it's changed to avoid unnecessary renders
         if (isClickable !== isPointer) {
-          setIsPointer(isClickable);
+          setIsPointer(isClickable as boolean);
         }
       }
     };
